@@ -9,14 +9,12 @@ import org.newdawn.slick.state.StateBasedGame;
 
 
 public class Main extends StateBasedGame
-
 {
 	// Class Constructor
 	public Main(String appName)
 	{
 		super(appName);
 	}
-
 
 	// Initialize your game states (calls init method of each gamestate, and
 	// set's the state ID)
