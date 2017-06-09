@@ -9,18 +9,6 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Main extends StateBasedGame
 {
-
-	// Game state identifiers
-	public static final int SPLASHSCREEN = 0;
-	public static final int MAINMENU = 1;
-	public static final int GAME = 2;
-
-	// Application Properties
-	public static final int WIDTH = 640;
-	public static final int HEIGHT = 480;
-	public static final int FPS = 60;
-	public static final double VERSION = 1.0;
-
 	// Class Constructor
 	public Main(String appName)
 	{
@@ -33,7 +21,7 @@ public class Main extends StateBasedGame
 	{
 		// The first state added will be the one that is loaded first, when the
 		// application is launched
-		 this.addState(new GameState());
+		 this.addState(new GameState(gc, this));
 
 	}
 
@@ -42,9 +30,9 @@ public class Main extends StateBasedGame
 	{
 		try
 		{
-			AppGameContainer app = new AppGameContainer(new Main("My Game v" + VERSION));
-			app.setDisplayMode(WIDTH, HEIGHT, false);
-			app.setTargetFrameRate(FPS);
+			AppGameContainer app = new AppGameContainer(new Main("My Game v" + Globals.VERSION));
+			app.setDisplayMode(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, Globals.FULLSCREEN);
+			app.setTargetFrameRate(Globals.FPS);
 			app.setShowFPS(true);
 			app.start();
 		}catch (SlickException e)
