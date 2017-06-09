@@ -7,7 +7,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+
 public class Main extends StateBasedGame
+
 {
 	// Class Constructor
 	public Main(String appName)
@@ -15,9 +17,11 @@ public class Main extends StateBasedGame
 		super(appName);
 	}
 
+
 	// Initialize your game states (calls init method of each gamestate, and
 	// set's the state ID)
 	public void initStatesList(GameContainer gc) throws SlickException
+
 	{
 		// The first state added will be the one that is loaded first, when the
 		// application is launched
