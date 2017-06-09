@@ -7,6 +7,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import com.dora.world.World;
+
 public class Main extends BasicGame
 {
 	public Main(String gamename)
@@ -15,7 +17,10 @@ public class Main extends BasicGame
 	}
 
 	@Override
-	public void init(GameContainer gc) throws SlickException {}
+	public void init(GameContainer gc) throws SlickException {
+		World world = new World(100);
+		world.display(640/100, 480/100);
+	}
 
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {}
