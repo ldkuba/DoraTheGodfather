@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import item.EmptyItem;
 import item.Item;
 import main.Main;
 
@@ -19,12 +20,14 @@ public class HotBar extends GuiElement
 	private int slotNumber;
 	
 	private Image slotImage;
-	private Item.ItemIDs[] itemImages;
+	private Image selectorImage;
+	private int selectedId;
+	private Item[] items;
 	
 	private GameContainer gc;
 	private Main app;
 	
-	public HotBar(String name, float x, float y, int slotW, int h, GameContainer gc, Main app, int slotNumber, String slotImagePath)
+	public HotBar(String name, float x, float y, int slotW, int h, GameContainer gc, Main app, int slotNumber, String slotImagePath, String selectorImagePath)
 	{
 		super(name);
 		this.x = (int) x;
@@ -34,6 +37,7 @@ public class HotBar extends GuiElement
 		this.gc = gc;
 		this.app = app;
 		
+		this.selectedId = 0;
 		this.slotNumber = slotNumber;
 		
 		try
@@ -44,11 +48,29 @@ public class HotBar extends GuiElement
 			e.printStackTrace();
 		}
 		
-		itemImages = new Item.ItemIDs[slotNumber];
+		try
+		{
+			this.selectorImage = new Image(selectorImagePath);
+		}catch (SlickException e)
+		{
+			e.printStackTrace();
+		}
+		
+		items = new Item[slotNumber];
 		for(int i = 0; i < slotNumber; i++)
 		{
-			itemImages[i] = Item.ItemIDs.empty;
+			items[i] = new EmptyItem(); //- EmptySlot
 		}		
+	}
+	
+	public void addItem(int x, Item item)
+	{
+		this.items[x] = item;
+	}
+	
+	public void removeItem(int x)
+	{
+		this.items[x] = new EmptyItem();
 	}
 	
 	public void draw(GameContainer gc, Graphics g)
@@ -56,7 +78,17 @@ public class HotBar extends GuiElement
 		for(int i = 0; i < slotNumber; i++)
 		{
 			slotImage.draw(x + i*slotWidth, y, slotWidth, height);
-			Item.itemImages[itemImages[i].ordinal()].draw(x + i*slotWidth, y, slotWidth, height);
+			Item.itemImages[items[i].getId().ordinal()].draw(x + i*slotWidth, y, slotWidth, height);
+			
+			if(selectedId == i)
+			{
+				selectorImage.draw(x + i*slotWidth, y);
+			}
 		}
+	}
+	
+	public void selectItem(int newId)
+	{
+		this.selectedId = newId;
 	}
 }

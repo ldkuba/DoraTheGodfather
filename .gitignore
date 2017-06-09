@@ -1,0 +1,10 @@
+/bin/
+
+*.classpath
+/natives/
+/lib/
+*.project
+
+/target/
+
+/res/
