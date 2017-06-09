@@ -23,6 +23,9 @@ public class GameState extends BasicGameState implements ComponentListener
 	private GuiManager gameGuiManager;
 	private ScalingBar healthBar;
 	
+	private float xOffset=0f;
+	private float yOffset=0f;
+	
 	private World world;
 
 	private GameContainer gc;
@@ -42,7 +45,8 @@ public class GameState extends BasicGameState implements ComponentListener
 		// END GUI ================================^^^^^^^^^^^^^^^
 		
 		//World:
-		world = new World(Globals.WORLD_SIZE_X);
+		world = new World();
+	
 	}
 
 	// init-method for initializing all resources
@@ -59,7 +63,7 @@ public class GameState extends BasicGameState implements ComponentListener
 		g.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
 
 		//draw world
-		world.display(Globals.SCREEN_WIDTH/Globals.WORLD_SIZE_X, Globals.SCREEN_HEIGHT/Globals.WORLD_SIZE_Y);
+		world.display(xOffset, yOffset);
 		
 		//Draws GUI
 		gameGuiManager.draw(gc, g);
