@@ -1,43 +1,55 @@
 package main;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import java.awt.SplashScreen;
+
 import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
 
-public class Main extends BasicGame
+public class Main extends StateBasedGame
 {
-	public Main(String gamename)
+
+	// Game state identifiers
+	public static final int SPLASHSCREEN = 0;
+	public static final int MAINMENU = 1;
+	public static final int GAME = 2;
+
+	// Application Properties
+	public static final int WIDTH = 640;
+	public static final int HEIGHT = 480;
+	public static final int FPS = 60;
+	public static final double VERSION = 1.0;
+
+	// Class Constructor
+	public Main(String appName)
 	{
-		super(gamename);
+		super(appName);
 	}
 
-	@Override
-	public void init(GameContainer gc) throws SlickException {}
-
-	@Override
-	public void update(GameContainer gc, int i) throws SlickException {}
-
-	@Override
-	public void render(GameContainer gc, Graphics g) throws SlickException
+	// Initialize your game states (calls init method of each gamestate, and
+	// set's the state ID)
+	public void initStatesList(GameContainer gc) throws SlickException
 	{
-		
+		// The first state added will be the one that is loaded first, when the
+		// application is launched
+		 this.addState(new GameState());
+
 	}
 
+	// Main Method
 	public static void main(String[] args)
 	{
 		try
 		{
-			AppGameContainer appgc;
-			appgc = new AppGameContainer(new Main("Simple Slick Game"));
-			appgc.setDisplayMode(640, 480, false);
-			appgc.start();
-		}
-		catch (SlickException ex)
+			AppGameContainer app = new AppGameContainer(new Main("My Game v" + VERSION));
+			app.setDisplayMode(WIDTH, HEIGHT, false);
+			app.setTargetFrameRate(FPS);
+			app.setShowFPS(true);
+			app.start();
+		}catch (SlickException e)
 		{
-			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+			e.printStackTrace();
 		}
 	}
 }
