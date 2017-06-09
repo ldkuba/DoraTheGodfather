@@ -10,6 +10,8 @@ import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.dora.world.World;
+
 import gui.Button;
 import gui.GuiManager;
 import gui.MyTextField;
@@ -20,6 +22,8 @@ public class GameState extends BasicGameState implements ComponentListener
 
 	private GuiManager gameGuiManager;
 	private ScalingBar healthBar;
+	
+	private World world;
 
 	private GameContainer gc;
 	private Main app;
@@ -36,6 +40,9 @@ public class GameState extends BasicGameState implements ComponentListener
 		gameGuiManager.addComponent(healthBar);
 		
 		// END GUI ================================^^^^^^^^^^^^^^^
+		
+		//World:
+		world = new World(Globals.WORLD_SIZE_X);
 	}
 
 	// init-method for initializing all resources
@@ -51,6 +58,9 @@ public class GameState extends BasicGameState implements ComponentListener
 		g.setColor(Color.black);
 		g.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
 
+		//draw world
+		world.display(Globals.SCREEN_WIDTH/Globals.WORLD_SIZE_X, Globals.SCREEN_HEIGHT/Globals.WORLD_SIZE_Y);
+		
 		//Draws GUI
 		gameGuiManager.draw(gc, g);
 	}
