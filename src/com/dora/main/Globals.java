@@ -15,5 +15,5 @@ public class Globals
 	
 	public static int WORLD_SIZE_X = 100;
 	public static int WORLD_SIZE_Y = 100;
-	public static int TILE_SIZE =32;
+	public static int TILE_SIZE =16;
 }
