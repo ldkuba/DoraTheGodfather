@@ -21,17 +21,17 @@ public class World {
 	ArrayList<ArrayList<Tile>> terrainGrid;
 
 	public World() {
-		try {
-			dirt = new Image("Images/Dirt.png");
-			water = new Image("Images/Water.png");
-			grass = new Image("Images/Grass.png");
-			rock = new Image("Images/Rock.png");
-			tree = new Image("Images/Tree.png");
-		} catch (SlickException e) {
-			System.err.println("Unable to load map textures!");
-			;
-		}
 		terrainGrid = new ArrayList<ArrayList<Tile>>(Globals.WORLD_SIZE_X);
+		objects = new ArrayList<Objects>();
+		
+		try{
+			water = new Image ("Images/Water.png");
+			grass = new Image ("Images/Grass.png");
+			dirt = new Image ("Images/Dirt.png");
+		}catch(SlickException e){
+			
+		}
+		
 		// generate terrain & Initial state of objects in the world.
 		fill();
 	}
@@ -53,7 +53,7 @@ public class World {
 			terrainGrid.add(new ArrayList<Tile>(Globals.WORLD_SIZE_Y));
 			for (int j = 0; j < Globals.WORLD_SIZE_Y; j++) {
 				if (waterOffset <= waterCounter) {
-					int waterChance = 1;
+					int waterChance = 100;
 					if (j > 0 && !terrainGrid.get(i).get(j - 1).isLand()) {
 						waterChance += 46;
 					}
@@ -80,15 +80,20 @@ public class World {
 			waterCounter++;
 		}
 		
-		int objectChance =10;
+		int objectChance =5;
 		for(int i=0; i<Globals.WORLD_SIZE_X; i++){
 			for (int j=0; j<Globals.WORLD_SIZE_Y;j++){
 				if(rand.nextInt(100)<=objectChance){
 					int oType = rand.nextInt(2);
 					if(oType==0){
-						if(terrainGrid.get(i).get(j).canPlaceObject()){
-							Rock rock = new Rock(i, j);
-							//objects.add(rock);
+						if(canPlaceObject(Rock.sizeX, Rock.sizeY, i, j)){
+							//Rock rock = new Rock(i, j);
+							addObject(new Rock(i, j), i , j);
+						}
+					}else if(oType==1){
+						if(canPlaceObject(Chest.sizeX, Chest.sizeY, i, j)){
+							//Chest chest = new Chest(i, j);
+							addObject(new Chest(i, j), i , j);
 						}
 					}
 				}
@@ -103,7 +108,7 @@ public class World {
 		}
 		for (int i =0; i<sizeX;i++){
 			for(int j=0;j<sizeY;j++){
-				if(!terrainGrid.get(i).get(j).canPlaceObject()){
+				if(!terrainGrid.get(x+i).get(y+j).canPlaceObject()){
 					return false;
 				}
 			}
@@ -112,11 +117,13 @@ public class World {
 	}
 	
 	public void addObject(Objects obj, int x, int y){
-		
 		objects.add(obj);
 		for (int i =0; i<obj.getSizeX();i++){
 			for(int j=0;j<obj.getSizeY();j++){
-				
+				if(!terrainGrid.get(x+i).get(j+y).canPlaceObject()){
+					System.err.println("what");
+				}
+				terrainGrid.get(x+i).get(j+y).setObject(obj, obj.getTextures().get(i).get(j));
 			}
 		}
 	}

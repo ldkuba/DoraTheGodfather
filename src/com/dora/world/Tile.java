@@ -29,6 +29,14 @@ public class Tile {
 		this.placeObject=false;
 	}
 	
+	public void removeObject(){
+		this.passable = true;
+		this.placeObject=true;
+		this.vBlock=false;
+		this.object=null;
+		this.oRef=null;
+	}
+	
 	public boolean canPlaceObject(){
 		return placeObject;
 	}
