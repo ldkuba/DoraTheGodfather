@@ -1,4 +1,4 @@
-package main;
+package com.dora.main;
 
 import java.awt.SplashScreen;
 

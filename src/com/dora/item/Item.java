@@ -1,4 +1,4 @@
-package item;
+package com.dora.item;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;

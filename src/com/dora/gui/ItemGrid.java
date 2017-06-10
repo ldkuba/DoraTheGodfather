@@ -1,14 +1,14 @@
-package gui;
+package com.dora.gui;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import item.EmptyItem;
-import item.Item;
-import main.Main;
-import util.Vector2;
+import com.dora.item.EmptyItem;
+import com.dora.item.Item;
+import com.dora.main.Main;
+import com.dora.util.Vector2;
 
 public class ItemGrid extends GuiElement
 {
@@ -137,5 +137,33 @@ public class ItemGrid extends GuiElement
 		int gridY = translatedY/this.slotSize;
 		
 		return new Vector2(gridX, gridY);
+	}
+
+	public void fillWith(Item[] newItems)
+	{
+		for(int j = 0; j < verticalSlotNumber; j++)
+		{
+			for(int i = 0; i < horizontalSlotNumber; i++)
+			{
+				if(i*j < newItems.length)
+				{
+					items[i][j] = newItems[i*j];
+				}else
+				{
+					items[i][j] = new EmptyItem();
+				}
+			}
+		}
+	}
+
+	public void removeAll()
+	{
+		for(int j = 0; j < verticalSlotNumber; j++)
+		{
+			for(int i = 0; i < horizontalSlotNumber; i++)
+			{
+				items[i][j] = new EmptyItem();
+			}
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package item;
+package com.dora.item;
 
 public class Item1 extends Item
 {

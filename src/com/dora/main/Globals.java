@@ -1,4 +1,4 @@
-package main;
+package com.dora.main;
 
 public class Globals
 {

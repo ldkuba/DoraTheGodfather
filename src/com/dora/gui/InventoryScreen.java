@@ -1,15 +1,17 @@
-package gui;
+package com.dora.gui;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.MouseListener;
+import org.newdawn.slick.SlickException;
 
-import item.EmptyItem;
-import item.Item;
-import main.GameState;
-import main.Globals;
-import main.Main;
-import util.Vector2;
+import com.dora.item.EmptyItem;
+import com.dora.item.Item;
+import com.dora.main.GameState;
+import com.dora.main.Globals;
+import com.dora.main.Main;
+import com.dora.util.Vector2;
 
 public class InventoryScreen implements MouseListener
 {
@@ -20,11 +22,19 @@ public class InventoryScreen implements MouseListener
 	private GuiManager guiManager;
 	private ItemGrid itemGrid;
 	private ItemGrid hotbarGrid;
+	private ItemGrid containerGrid;
+	
+	private boolean hasContainer = false;
+	
+	private Image noContainerImage;
+	private int noContainerImageX;
+	private int noContainerImageY;
 	
 	private Item pickedItem;
 	
 	private int gridSize = 64;
-	private int horizontalSize = 10;
+	private int horizontalItemSize = 6;
+	private int horizontalHotbarSize = 10;
 	private int verticalSize = 8;
 	
 	private int itemGridX;
@@ -32,6 +42,9 @@ public class InventoryScreen implements MouseListener
 	
 	private int hotbarGridX;
 	private int hotbarGridY;
+	
+	private int containerGridX;
+	private int containerGridY;
 	
 	private boolean visible;
 	
@@ -46,14 +59,28 @@ public class InventoryScreen implements MouseListener
 		
 		this.pickedItem = new EmptyItem();
 		
-		this.itemGridX = Globals.SCREEN_WIDTH/2 - (horizontalSize/2)*gridSize;
+		this.itemGridX = Globals.SCREEN_WIDTH/2 - ((horizontalHotbarSize+4)/2)*gridSize; //horizontalHotbarSize +4 - because we want space for container inventory
 		this.itemGridY = (int) (Globals.SCREEN_HEIGHT*0.15f);
 				
-		this.hotbarGridX =  Globals.SCREEN_WIDTH/2 - (horizontalSize/2)*gridSize;
+		this.hotbarGridX =  Globals.SCREEN_WIDTH/2 - (horizontalHotbarSize/2)*gridSize;
 		this.hotbarGridY = (int) (Globals.SCREEN_HEIGHT*0.8f);
 		
-		itemGrid = new ItemGrid("InventoryGrid", itemGridX, itemGridY, gridSize, gc, app, horizontalSize, verticalSize, "res/gui/slot.png");
-		hotbarGrid = new ItemGrid("InventoryHotbarGrid", hotbarGridX, hotbarGridY, gridSize, gc, app, 10, 1, "res/gui/slot.png");
+		this.containerGridX = Globals.SCREEN_WIDTH/2 + gridSize; //horizontalHotbarSize +4 - because we want space for container inventory
+		this.containerGridY = (int) (Globals.SCREEN_HEIGHT*0.15f);
+		
+		itemGrid = new ItemGrid("InventoryGrid", itemGridX, itemGridY, gridSize, gc, app, horizontalItemSize, verticalSize, "res/gui/slot.png");
+		hotbarGrid = new ItemGrid("InventoryHotbarGrid", hotbarGridX, hotbarGridY, gridSize, gc, app, horizontalHotbarSize, 1, "res/gui/slot.png");
+		containerGrid = new ItemGrid("ContainerGrid", containerGridX, containerGridY, gridSize, gc, app, horizontalItemSize, verticalSize, "res/gui/slot.png");
+		
+		try{
+			noContainerImage = new Image("res/gui/noContainerInventory.png");
+		}catch (SlickException e)
+		{
+			e.printStackTrace();
+		}
+		
+		noContainerImageX = containerGridX;
+		noContainerImageY = containerGridY;
 		
 		gc.getInput().addMouseListener(this);
 	}
@@ -63,6 +90,12 @@ public class InventoryScreen implements MouseListener
 		this.visible = true;
 		guiManager.addComponent(itemGrid);
 		guiManager.addComponent(hotbarGrid);
+		
+		Item[] testItems = new Item[1];
+		testItems[0] = new EmptyItem();
+		
+		//temp for testing drag and drop
+		//this.addContainerInventory(testItems);
 	}
 	
 	public void hide()
@@ -70,6 +103,7 @@ public class InventoryScreen implements MouseListener
 		this.visible = false;
 		guiManager.removeComponent(itemGrid);
 		guiManager.removeComponent(hotbarGrid);
+		removeContainerInventory();
 	}
 	
 	public boolean addItem(Item item) //on pickup
@@ -95,7 +129,25 @@ public class InventoryScreen implements MouseListener
 		if(visible)
 		{
 			Item.itemImages[this.pickedItem.getId().ordinal()].draw(gc.getInput().getMouseX() - this.gridSize/2, gc.getInput().getMouseY() - this.gridSize/2, this.gridSize, this.gridSize);
+			if(!hasContainer)
+			{
+				this.noContainerImage.draw(noContainerImageX, noContainerImageY, horizontalItemSize*this.gridSize, this.verticalSize*this.gridSize);
+			}
 		}
+	}
+	
+	public void addContainerInventory(Item[] items)
+	{
+		this.hasContainer = true;
+		this.guiManager.addComponent(containerGrid);	
+		containerGrid.fillWith(items);
+	}
+	
+	public void removeContainerInventory()
+	{
+		this.hasContainer = false;
+		this.guiManager.removeComponent(containerGrid);
+		containerGrid.removeAll();
 	}
 
 	public void inputEnded() {}
@@ -150,6 +202,18 @@ public class InventoryScreen implements MouseListener
 					hotbarGrid.removeItem(gridPos.getX(), gridPos.getY());
 					
 					this.gameState.getHotbar().removeItem(gridPos.getX());
+				}else if(containerGrid.getCoordinatesFromScreenSpace(x, y) != null && hasContainer)
+				{
+					Vector2 gridPos = containerGrid.getCoordinatesFromScreenSpace(x, y);
+					
+					this.pickedItem = containerGrid.getItem(gridPos.getX(), gridPos.getY());
+					
+					if(pickedItem.getId().compareTo(Item.ItemIDs.empty) == 0)
+					{
+						return;
+					}
+
+					containerGrid.removeItem(gridPos.getX(), gridPos.getY());
 				}//else nothing happens
 			}
 		}
@@ -178,6 +242,11 @@ public class InventoryScreen implements MouseListener
 					
 					this.pickedItem = hotbarGrid.addItem(this.pickedItem, gridPos.getX(), gridPos.getY());
 
+				}else if(containerGrid.getCoordinatesFromScreenSpace(x, y) != null && hasContainer)
+				{
+					Vector2 gridPos = containerGrid.getCoordinatesFromScreenSpace(x, y);
+					
+					this.pickedItem = containerGrid.addItem(this.pickedItem, gridPos.getX(), gridPos.getY());
 				}else
 				{
 					//dropItem (TODO)

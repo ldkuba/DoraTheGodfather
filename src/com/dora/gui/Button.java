@@ -1,4 +1,4 @@
-package gui;
+package com.dora.gui;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,7 +9,7 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.MouseOverArea;
 
-import main.Main;
+import com.dora.main.Main;
 
 public class Button extends GuiElement
 {

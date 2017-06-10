@@ -1,4 +1,4 @@
-package gui;
+package com.dora.gui;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;

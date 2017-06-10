@@ -1,4 +1,4 @@
-package main;
+package com.dora.main;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -11,14 +11,14 @@ import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import gui.Button;
-import gui.GuiManager;
-import gui.HotBar;
-import gui.InventoryScreen;
-import gui.MyTextField;
-import gui.ScalingBar;
-import item.Item;
-import item.Item1;
+import com.dora.gui.Button;
+import com.dora.gui.GuiManager;
+import com.dora.gui.HotBar;
+import com.dora.gui.InventoryScreen;
+import com.dora.gui.MyTextField;
+import com.dora.gui.ScalingBar;
+import com.dora.item.Item;
+import com.dora.item.Item1;
 
 public class GameState extends BasicGameState implements ComponentListener
 {

@@ -1,4 +1,4 @@
-package util;
+package com.dora.util;
 
 public class Vector2
 {
