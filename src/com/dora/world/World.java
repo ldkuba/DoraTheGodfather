@@ -25,9 +25,9 @@ public class World {
 		objects = new ArrayList<Objects>();
 		
 		try{
-			water = new Image ("Images/Water.png");
-			grass = new Image ("Images/Grass.png");
-			dirt = new Image ("Images/Dirt.png");
+			water = new Image ("res/Textures/Water.png");
+			grass = new Image ("res/Textures/Grass.png");
+			dirt = new Image ("res/Textures/Dirt.png");
 		}catch(SlickException e){
 			
 		}

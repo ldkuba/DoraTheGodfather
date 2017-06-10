@@ -16,9 +16,9 @@ public class Chest extends Objects {
 		
 		try{
 		getTextures().add(new ArrayList<Image>());
-		getTextures().get(0).add(new Image("Images/ChestLeft.png"));
+		getTextures().get(0).add(new Image("res/Textures/ChestLeft.png"));
 		getTextures().add(new ArrayList<Image>());
-		getTextures().get(1).add(new Image("Images/ChestRight.png"));
+		getTextures().get(1).add(new Image("res/Textures/ChestRight.png"));
 		}catch(SlickException e){
 			System.err.println("Unable to load Chest textures!!");
 		}

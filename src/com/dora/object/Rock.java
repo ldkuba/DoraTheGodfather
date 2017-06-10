@@ -15,7 +15,7 @@ public class Rock extends Objects {
 		super(sizeX, sizeY, xCoord, yCoord);
 		getTextures().add((new ArrayList<Image>()));
 		try{
-		getTextures().get(0).add(new Image("Images/Rock.png"));
+		getTextures().get(0).add(new Image("res/Textures/Rock.png"));
 		}catch(SlickException e){
 			System.err.println("Unable to load rock tex!");
 		}
