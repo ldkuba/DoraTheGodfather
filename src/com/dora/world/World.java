@@ -30,6 +30,7 @@ public class World {
 			dirt = new Image ("res/Textures/Dirt.png");
 		}catch(SlickException e){
 			
+
 		}
 		
 		// generate terrain & Initial state of objects in the world.
