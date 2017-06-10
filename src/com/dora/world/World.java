@@ -21,11 +21,11 @@ public class World {
 
 	public World() {
 		try {
-			dirt = new Image("Images/Dirt.png");
-			water = new Image("Images/Water.png");
-			grass = new Image("Images/Grass.png");
-			rock = new Image("Images/Rock.png");
-			tree = new Image("Images/Tree.png");
+			dirt = new Image("res/textures/Dirt.png");
+			water = new Image("res/textures/Water.png");
+			grass = new Image("res/textures/Grass.png");
+			rock = new Image("res/textures/Rock.png");
+			tree = new Image("res/textures/Tree.png");
 		} catch (SlickException e) {
 			System.err.println("Unable to load map textures!");
 			;
