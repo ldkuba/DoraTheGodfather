@@ -4,5 +4,7 @@
 /natives/
 /lib/
 *.project
+/target/
 
+/res/
 /target/

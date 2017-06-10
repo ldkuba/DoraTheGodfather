@@ -11,6 +11,9 @@ import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+
+import com.dora.world.World;
+
 import com.dora.gui.Button;
 import com.dora.gui.GuiManager;
 import com.dora.gui.HotBar;
@@ -20,16 +23,25 @@ import com.dora.gui.ScalingBar;
 import com.dora.item.Item;
 import com.dora.item.Item1;
 
+
 public class GameState extends BasicGameState implements ComponentListener
 {
 
 	private GuiManager gameGuiManager;
 	private ScalingBar healthBar;
+
+	
+	private float xOffset=0f;
+	private float yOffset=0f;
+	
+	private World world;
+
+
 	private HotBar itemBar;
 	private InventoryScreen inventoryScreen;
 	
 	private boolean inMenu = false;
-	
+
 	private GameContainer gc;
 	private Main app;
 	
@@ -53,6 +65,10 @@ public class GameState extends BasicGameState implements ComponentListener
 		inventoryScreen = new InventoryScreen(gameGuiManager, gc, app, this);
 		
 		// END GUI ================================^^^^^^^^^^^^^^^
+		
+		//World:
+		world = new World();
+	
 	}
 
 	// init-method for initializing all resources
@@ -69,6 +85,9 @@ public class GameState extends BasicGameState implements ComponentListener
 		g.setColor(Color.black);
 		g.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
 
+		//draw world
+		world.display(xOffset, yOffset);
+		
 		//Draws GUI
 		gameGuiManager.draw(gc, g);
 		
