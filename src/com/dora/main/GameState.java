@@ -1,8 +1,9 @@
-package main;
+package com.dora.main;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
@@ -10,23 +11,36 @@ import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+
 import com.dora.world.World;
 
-import gui.Button;
-import gui.GuiManager;
-import gui.MyTextField;
-import gui.ScalingBar;
+import com.dora.gui.Button;
+import com.dora.gui.GuiManager;
+import com.dora.gui.HotBar;
+import com.dora.gui.InventoryScreen;
+import com.dora.gui.MyTextField;
+import com.dora.gui.ScalingBar;
+import com.dora.item.Item;
+import com.dora.item.Item1;
+
 
 public class GameState extends BasicGameState implements ComponentListener
 {
 
 	private GuiManager gameGuiManager;
 	private ScalingBar healthBar;
+
 	
 	private float xOffset=0f;
 	private float yOffset=0f;
 	
 	private World world;
+
+
+	private HotBar itemBar;
+	private InventoryScreen inventoryScreen;
+	
+	private boolean inMenu = false;
 
 	private GameContainer gc;
 	private Main app;
@@ -36,11 +50,19 @@ public class GameState extends BasicGameState implements ComponentListener
 		this.gc = gc;
 		this.app = app;
 
+		//Initialize Item Images Array (This has to come before: GUI, )
+		Item.loadImages("res/items0.png", 64, 4);
+		
 		// GUI =====================================VVVVVVVVVVVVVV		
 		gameGuiManager = new GuiManager(this);
 		
 		healthBar = new ScalingBar("HealthBar", Globals.SCREEN_WIDTH*0.05f, Globals.SCREEN_HEIGHT*0.9f, 150, 30, gc, app, 10.0f, Color.red);
 		gameGuiManager.addComponent(healthBar);
+		
+		itemBar = new HotBar("ItemBar", Globals.SCREEN_WIDTH*0.3f, Globals.SCREEN_HEIGHT*0.9f, 64, 64, gc, app, 10, "res/gui/slot.png", "res/gui/hotbarSelector.png");
+		gameGuiManager.addComponent(itemBar);
+		
+		inventoryScreen = new InventoryScreen(gameGuiManager, gc, app, this);
 		
 		// END GUI ================================^^^^^^^^^^^^^^^
 		
@@ -52,7 +74,8 @@ public class GameState extends BasicGameState implements ComponentListener
 	// init-method for initializing all resources
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
 	{
-
+		for(int i = 0; i < 3; i++)
+			inventoryScreen.addItem(new Item1());
 	}
 
 	// render-method for all the things happening on-screen
@@ -67,6 +90,8 @@ public class GameState extends BasicGameState implements ComponentListener
 		
 		//Draws GUI
 		gameGuiManager.draw(gc, g);
+		
+		inventoryScreen.render();
 	}
 
 	// update-method with all the magic happening in it
@@ -74,7 +99,65 @@ public class GameState extends BasicGameState implements ComponentListener
 	{
 		
 	}
+	
+	public HotBar getHotbar()
+	{
+		return this.itemBar;
+	}
 
+	public void keyPressed(int key, char c)
+	{
+		if(key == Input.KEY_1)
+		{
+			itemBar.selectItem(0);
+		}else if(key == Input.KEY_2)
+		{
+			itemBar.selectItem(1);
+		}else if(key == Input.KEY_3)
+		{
+			itemBar.selectItem(2);
+		}else if(key == Input.KEY_4)
+		{
+			itemBar.selectItem(3);
+		}else if(key == Input.KEY_5)
+		{
+			itemBar.selectItem(4);
+		}else if(key == Input.KEY_6)
+		{
+			itemBar.selectItem(5);
+		}else if(key == Input.KEY_7)
+		{
+			itemBar.selectItem(6);
+		}else if(key == Input.KEY_8)
+		{
+			itemBar.selectItem(7);
+		}else if(key == Input.KEY_9)
+		{
+			itemBar.selectItem(8);
+		}else if(key == Input.KEY_0)
+		{
+			itemBar.selectItem(9);
+		}
+		
+		if(key == Input.KEY_ESCAPE)
+		{
+			gc.exit();
+		}
+		
+		if(key == Input.KEY_I)
+		{
+			if(inMenu)
+			{
+				inventoryScreen.hide();
+				inMenu = false;
+			}else
+			{
+				inventoryScreen.show();
+				inMenu = true;
+			}
+		}
+	}
+	
 	// Intenal GUI (this is fucked up but it works)
 	public void componentActivated(AbstractComponent source)
 	{

@@ -1,4 +1,4 @@
-package gui;
+package com.dora.gui;
 
 import java.awt.Font;
 import org.newdawn.slick.GameContainer;
@@ -7,7 +7,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.gui.AbstractComponent;
 
-import main.Main;
+import com.dora.main.Main;
 
 public class Label extends GuiElement
 {

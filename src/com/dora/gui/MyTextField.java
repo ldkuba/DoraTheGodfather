@@ -1,13 +1,14 @@
-package gui;
+package com.dora.gui;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.gui.TextField;
+
+import com.dora.main.Main;
+
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
-
-import main.Main;
 
 public class MyTextField extends GuiElement
 {

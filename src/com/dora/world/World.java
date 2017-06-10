@@ -6,7 +6,7 @@ import java.util.Random;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import main.Globals;
+import com.dora.main.Globals;
 
 public class World {
 

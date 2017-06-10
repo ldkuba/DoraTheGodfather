@@ -1,11 +1,11 @@
-package gui;
+package com.dora.gui;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.gui.AbstractComponent;
 
-import main.Main;
+import com.dora.main.Main;
 
 public class ScalingBar extends GuiElement
 {
