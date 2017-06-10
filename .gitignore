@@ -1,17 +1,10 @@
 /bin/
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 *.classpath
 /natives/
 /lib/
 *.project
-<<<<<<< HEAD
-/target/
-=======
-
 /target/
 
->>>>>>> master
 /res/
+/target/
