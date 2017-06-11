@@ -386,13 +386,25 @@ public class World
 			}
 		}*/
 		int dist = (int) Math.floor(playerDist(x,y,xOffset,yOffset));
-		for(int i=0; i<Math.abs(x-(xOffset+Globals.SCREEN_WIDTH/2));i++){
-			//xx+= (i/dist)*(x-(xOffset+Globals.SCREEN_WIDTH/2));
-			yy+= (((yOffset+Globals.SCREEN_HEIGHT/2)-y)/(xx-x));//(i/dist)*(y-(yOffset+Globals.SCREEN_HEIGHT/2));
-			if(tileAtPixel((int)Math.floor(xx+i), (int) Math.floor(yy)).blocksView()){
-				System.out.println("cantSee" + xx+ "" + yy);
-				return false;
+		if(xx<x){
+			for(int i=0; i<(x-(xOffset+Globals.SCREEN_WIDTH/2));i++){
+				//xx+= (i/dist)*(x-(xOffset+Globals.SCREEN_WIDTH/2));
+				yy+= (((yOffset+Globals.SCREEN_HEIGHT/2)-y)/(xx-x));//(i/dist)*(y-(yOffset+Globals.SCREEN_HEIGHT/2));
+				if(tileAtPixel((int)Math.floor(xx+i), (int) Math.floor(yy)).blocksView()){
+					System.out.println("cantSee" + xx+ "" + yy);
+					return false;
 				
+				}
+			}
+		}else{
+			for(int i=0; i>(x-(xOffset+Globals.SCREEN_WIDTH/2));i--){
+				//xx+= (i/dist)*(x-(xOffset+Globals.SCREEN_WIDTH/2));
+				yy+= (((yOffset+Globals.SCREEN_HEIGHT/2)-y)/(xx-x));//(i/dist)*(y-(yOffset+Globals.SCREEN_HEIGHT/2));
+				if(tileAtPixel((int)Math.floor(xx+i), (int) Math.floor(yy)).blocksView()){
+					System.out.println("cantSee" + xx+ "" + yy);
+					return false;
+				
+				}
 			}
 		}
 		
