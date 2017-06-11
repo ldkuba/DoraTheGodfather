@@ -55,7 +55,7 @@ public class Tile {
 			this.alphas[i] = alphas[i];
 		}
 
-		System.out.println(this.alphas[0]);
+		//System.out.println(this.alphas[0]);
 		//this.terrain.setColor(Image.TOP_LEFT, 0, 0, 0, this.alphas[0]);
 		this.terrain.setColor(Image.TOP_RIGHT, val, val, val, 255-this.alphas[1]);
 		this.terrain.setColor(Image.BOTTOM_LEFT, val, val, val, 255-this.alphas[2]);

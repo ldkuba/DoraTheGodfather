@@ -7,9 +7,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import com.dora.main.Globals;
-import com.dora.object.*;
-
-import jdk.nashorn.internal.objects.Global;
+import com.dora.object.Chest;
+import com.dora.object.Rock;
+import com.dora.object.Tree;
 
 public class World
 {

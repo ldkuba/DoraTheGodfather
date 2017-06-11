@@ -384,6 +384,16 @@ public class GameState extends BasicGameState implements ComponentListener
 		return this.entityManager;
 	}
 	
+	public NPCManager getNPCManager()
+	{
+		return this.npcManager;
+	}
+	
+	public void mousePressed(int button, int x, int y)
+	{
+		this.getHotbar().getSelectedItem().onLeftClick();
+	}
+	
 	public void keyPressed(int key, char c)
 	{		
 		if(key == Input.KEY_A)

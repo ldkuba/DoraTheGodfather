@@ -125,6 +125,16 @@ public class NPC extends Character
 		return true;
 	}
 	
+	public void dealDamage(float dmg)
+	{
+		this.health -= dmg;
+		
+		if(health <= 0)
+		{
+			gameState.getNPCManager().removeNPC(this);
+		}
+	}
+	
 	public void update(float tpf) {}
 	
 	public void render(int xOffset, int yOffset) {}
