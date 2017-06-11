@@ -5,7 +5,7 @@ public class Globals
 	public static final double VERSION = 1.0;
 	public static int SCREEN_WIDTH = 1920;
 	public static int SCREEN_HEIGHT = 1080;
-	public static boolean FULLSCREEN = true;
+	public static boolean FULLSCREEN = false;
 	public static final int FPS = 60;
 	
 	//Game State ids
