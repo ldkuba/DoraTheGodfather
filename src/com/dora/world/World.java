@@ -267,7 +267,7 @@ public class World
 						}
 					}else if(oType == 1)
 					{
-						if(canPlaceObject(Chest.sizeX, Chest.sizeY, i, j))
+						if(canPlaceObject(Chest.sizeX, Chest.sizeY, i, j)&&rand.nextInt(1000)<4)
 						{
 							// Chest chest = new Chest(i, j);
 							addObject(new Chest(i, j), i, j);
@@ -386,22 +386,23 @@ public class World
 			}
 		}*/
 		int dist = (int) Math.floor(playerDist(x,y,xOffset,yOffset));
-		for(int i = 0; i<dist;i++){
-			xx+= (i/dist)*(x-xx);
-			yy+= (i/dist)*(y-yy);
+		for(int i=0; i<Math.abs(x-(xOffset+Globals.SCREEN_WIDTH/2));i++){
+			//xx+= (i/dist)*(x-(xOffset+Globals.SCREEN_WIDTH/2));
+			yy+= (((yOffset+Globals.SCREEN_HEIGHT/2)-y)/(xx-x));//(i/dist)*(y-(yOffset+Globals.SCREEN_HEIGHT/2));
+			if(tileAtPixel((int)Math.floor(xx+i), (int) Math.floor(yy)).blocksView()){
+				System.out.println("cantSee" + xx+ "" + yy);
+				return false;
+				
+			}
 		}
-		if(tileAtPixel((int)Math.floor(xx), (int) Math.floor(yy)).blocksView()){
-			//System.out.println("cantSee");
-			return false;
-			
-		}
+		
 		//System.out.println("cansee");
 		return true;
 	}
 	
 	public float [] getAlphas(int x, int y, int xOffset,int yOffset){
 		float [] retAlphas = new float [4];
-		int maxDist = Globals.SCREEN_HEIGHT/3;
+		float maxDist = (Globals.SCREEN_HEIGHT/3);
 		int xx = xOffset+Globals.SCREEN_WIDTH/2;
 		int yy = yOffset+Globals.SCREEN_HEIGHT/2;
 		int tX = x*Globals.TILE_SIZE;
@@ -410,7 +411,7 @@ public class World
 				retAlphas[0]=255;
 		}else{
 			if(canSee(tX, tY, xOffset, yOffset)){
-				retAlphas[0]=Math.abs(playerDist(tX, tY, xOffset, yOffset))/100; //255 *(Math.min(((playerDist(tX, tY, xOffset, yOffset))-maxDist/2), 0)/1000);
+				retAlphas[0]= ((Math.abs(playerDist(tX, tY, xOffset, yOffset)))/(maxDist)); //255 *(Math.min(((playerDist(tX, tY, xOffset, yOffset))-maxDist/2), 0)/1000);
 			}else{
 				retAlphas[0]=255;
 			}
@@ -420,9 +421,10 @@ public class World
 			retAlphas[1]=255;
 		}else{
 			if(canSee(tX+Globals.TILE_SIZE, tY, xOffset, yOffset)){
-				retAlphas[1]= Math.abs(playerDist(tX, tY, xOffset, yOffset))/100;//255 * (Math.min(((playerDist(tX, tY, xOffset, yOffset))-maxDist/2), 0)/1000);
+				retAlphas[1]=((Math.abs(playerDist(tX+Globals.TILE_SIZE, tY, xOffset, yOffset)))/(maxDist));//255 * (Math.min(((playerDist(tX, tY, xOffset, yOffset))-maxDist/2), 0)/1000);
+				//System.out.println(retAlphas[1]);
 			}else{
-				retAlphas[0]=255;
+				retAlphas[1]=255;
 			}
 		}
 		
@@ -430,9 +432,9 @@ public class World
 			retAlphas[2]=255;
 		}else{
 			if(canSee(tX, tY+Globals.TILE_SIZE, xOffset, yOffset)){
-				retAlphas[2]=Math.abs(playerDist(tX, tY, xOffset, yOffset))/100; // 255 *(Math.min(((playerDist(tX, tY, xOffset, yOffset))-maxDist/2), 0)/1000);
+				retAlphas[2]=((Math.abs(playerDist(tX, tY+Globals.TILE_SIZE, xOffset, yOffset)))/(maxDist));// 255 *(Math.min(((playerDist(tX, tY, xOffset, yOffset))-maxDist/2), 0)/1000);
 			}else{
-				retAlphas[0]=255;
+				retAlphas[2]=255;
 			}
 		}
 		
@@ -440,9 +442,9 @@ public class World
 			retAlphas[3]=255;
 		}else{
 			if(canSee(tX+Globals.TILE_SIZE, tY+Globals.TILE_SIZE, xOffset, yOffset)){
-				retAlphas[3]=Math.abs(playerDist(tX, tY, xOffset, yOffset))/100; //255 *(Math.min(((playerDist(tX, tY, xOffset, yOffset))-maxDist/2), 0)/1000);
+				retAlphas[3]= ((Math.abs(playerDist(tX+Globals.TILE_SIZE, tY+Globals.TILE_SIZE, xOffset, yOffset)))/(maxDist));//255 *(Math.min(((playerDist(tX, tY, xOffset, yOffset))-maxDist/2), 0)/1000);
 			}else{
-				retAlphas[0]=255;
+				retAlphas[3]=255;
 			}
 		}
 		

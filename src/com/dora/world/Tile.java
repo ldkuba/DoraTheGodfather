@@ -49,25 +49,25 @@ public class Tile {
 	}
 
 	public void setAlphas(float[] alphas) {
-		int val = 10;
+		int val = 1;
 		
 		for (int i = 0; i < this.alphas.length; i++) {
 			this.alphas[i] = alphas[i];
 		}
 
-		System.out.println(this.alphas[0]);
+		//System.out.println(this.alphas[0]);
 		//this.terrain.setColor(Image.TOP_LEFT, 0, 0, 0, this.alphas[0]);
-		this.terrain.setColor(Image.TOP_RIGHT, val, val, val, 255-this.alphas[1]);
-		this.terrain.setColor(Image.BOTTOM_LEFT, val, val, val, 255-this.alphas[2]);
-		this.terrain.setColor(Image.BOTTOM_RIGHT, val, val, val, 255-this.alphas[3]);
+		this.terrain.setColor(Image.TOP_RIGHT, 255-this.alphas[1], 255-this.alphas[1], 255-this.alphas[1], 255-this.alphas[1]);
+		this.terrain.setColor(Image.BOTTOM_LEFT, 255-this.alphas[2], 255-this.alphas[2], 255-this.alphas[2], 255-this.alphas[2]);
+		this.terrain.setColor(Image.BOTTOM_RIGHT, 255-this.alphas[3], 255-this.alphas[3], 255-this.alphas[3],255-this.alphas[3]);
 		
-		this.terrain.setColor(Image.TOP_LEFT, val, val, val, 255-this.alphas[0]);
+		this.terrain.setColor(Image.TOP_LEFT, 255-this.alphas[0], 255-this.alphas[0], 255-this.alphas[0], 255-this.alphas[0]);
 
 		if (this.object != null) {
-			this.object.setColor(Image.TOP_LEFT, val, val, val, 255-this.alphas[0]);
-			this.object.setColor(Image.TOP_RIGHT, val, val, val, 255-this.alphas[1]);
-			this.object.setColor(Image.BOTTOM_LEFT, val, val, val, 255-this.alphas[2]);
-			this.object.setColor(Image.BOTTOM_RIGHT, val, val, val, 255-this.alphas[3]);
+			this.object.setColor(Image.TOP_LEFT, 255-this.alphas[0], 255-this.alphas[0], 255-this.alphas[0], 255-this.alphas[0]);
+			this.object.setColor(Image.TOP_RIGHT, 255-this.alphas[1], 255-this.alphas[1], 255-this.alphas[1], 255-this.alphas[1]);
+			this.object.setColor(Image.BOTTOM_LEFT, 255-this.alphas[2], 255-this.alphas[2], 255-this.alphas[2], 255-this.alphas[2]);
+			this.object.setColor(Image.BOTTOM_RIGHT, 255-this.alphas[3], 255-this.alphas[3], 255-this.alphas[3], 255-this.alphas[3]);
 		}
 	}
 
