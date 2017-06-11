@@ -11,7 +11,7 @@ import com.dora.world.Objects;
 public class Bullet extends Entity
 {
 	private float speed;
-	private final float DEFAULT_BULLET_SPEED = 0.3f;
+	private final float DEFAULT_BULLET_SPEED = 0.7f;
 	
 	private boolean fired;
 	
@@ -29,7 +29,7 @@ public class Bullet extends Entity
 	{
 		Image tmpImage = Entity.entityImages[id.ordinal()].copy();
 		tmpImage.setCenterOfRotation(this.ENTITY_IMAGE_SIZE/2, this.ENTITY_IMAGE_SIZE/2);
-		tmpImage.setRotation(angle);
+		tmpImage.setRotation(radToDeg(angle));
 		tmpImage.draw(this.xPos + xOffset, this.yPos + yOffset, this.ENTITY_IMAGE_SIZE, this.ENTITY_IMAGE_SIZE);
 	}
 	
@@ -38,7 +38,7 @@ public class Bullet extends Entity
 		int deltaX = 0;
 		int deltaY = 0;
 		
-		float deltaYFloat = -(float) (Math.sin(angle)*speed*tpf);
+		float deltaYFloat = (float) (Math.sin(angle)*speed*tpf);
 		float deltaXFloat = (float) (Math.cos(angle)*speed*tpf);
 		
 		deltaX = (int) deltaXFloat;
@@ -95,6 +95,11 @@ public class Bullet extends Entity
 		
 		this.xPos += deltaX;
 		this.yPos += deltaY;
+	}
+	
+	private float radToDeg(float rad)
+	{
+		return (float) ((rad*180.0f) / Math.PI);
 	}
 	
 	public void fire()

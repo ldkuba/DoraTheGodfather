@@ -34,6 +34,13 @@ public class EntityManager
 		{
 			entities.get(i).render(xOffset, yOffset);
 		}
+		
+		ArrayList<Entity> tmp = (ArrayList<Entity>) entities.clone();
+		
+		for(int i = 0; i < tmp.size(); i++)
+		{
+			
+		}
 	}
 	
 	public void addEntity(Entity entity)

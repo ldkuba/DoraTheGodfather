@@ -1,5 +1,7 @@
 package com.dora.entity;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -33,6 +35,8 @@ public class Entity
 	{
 		xPos = 0;
 		yPos = 0;
+		
+		this.lifetime = 0;
 		
 		this.angle = 0;
 	}
@@ -90,6 +94,16 @@ public class Entity
 	// TODO
 	public NPC collideWithNPCs(NPCManager npcManager, int deltaX, int deltaY)
 	{
+		ArrayList<NPC> npcs = npcManager.getNPCs();
+		
+		for(int i = 0; i < npcs.size(); i++)
+		{
+			if(this.xPos + this.ENTITY_IMAGE_SIZE >= npcs.get(i).getX() && this.xPos <= npcs.get(i).getX() + npcs.get(i).getSize() && this.yPos + this.ENTITY_IMAGE_SIZE >= npcs.get(i).getY() && this.yPos <= npcs.get(i).getY() + npcs.get(i).getSize())
+			{
+				return npcs.get(i);
+			}
+		}
+		
 		return null;
 	}
 	
