@@ -12,11 +12,7 @@ import com.dora.main.Globals;
 
 public class Player extends Character
 {	
-	private Image defaultImage;
-	private Animation leftWalkAnim;
-	private Animation rightWalkAnim;
-	private Animation upWalkAnim;
-	private Animation downWalkAnim;
+	private Animation walkAnim;
 	
 	private Image spriteSheetImage;
 	private final int PLAYER_IMAGE_SIZE_SS = 32;
@@ -26,13 +22,7 @@ public class Player extends Character
 	private final float DEFAULT_SPEED = 0.1f;
 	private final int MAX_INV_SIZE = 48 + 10;
 	
-	private MoveDirection playerMoveDirection;
-	
 	private GameState gameState;
-	
-	public enum MoveDirection {
-		left, right, up, down, stationary
-	}
 	
 	public Player(float xOffset, float yOffset, GameState gs)
 	{
@@ -41,7 +31,7 @@ public class Player extends Character
 		this.health = MAX_HEALTH;
 		this.speed = DEFAULT_SPEED;
 		
-		this.playerMoveDirection = MoveDirection.stationary;
+		this.moveDirection = MoveDirection.stationary;
 		
 		this.xPos = (int) (xOffset + Globals.SCREEN_WIDTH/2 - this.PLAYER_IMAGE_SIZE/2);
 		this.yPos = (int) (yOffset + Globals.SCREEN_HEIGHT/2 - this.PLAYER_IMAGE_SIZE/2);
@@ -61,19 +51,9 @@ public class Player extends Character
 		}
 		
 		SpriteSheet playerSpriteSheet = new SpriteSheet(spriteSheetImage, PLAYER_IMAGE_SIZE_SS, PLAYER_IMAGE_SIZE_SS);
-		defaultImage = playerSpriteSheet.getSubImage(0, 0);
 		
-		Image[] leftImages = {playerSpriteSheet.getSubImage(1, 0), playerSpriteSheet.getSubImage(2, 0)};
-		leftWalkAnim = new Animation(leftImages, 300);
-		
-		Image[] rightImages = {playerSpriteSheet.getSubImage(1, 1), playerSpriteSheet.getSubImage(2, 1)};
-		rightWalkAnim = new Animation(rightImages, 300);
-		
-		Image[] upImages = {playerSpriteSheet.getSubImage(1, 2), playerSpriteSheet.getSubImage(2, 2)};
-		upWalkAnim = new Animation(upImages, 300);
-		
-		Image[] downImages = {playerSpriteSheet.getSubImage(1, 3), playerSpriteSheet.getSubImage(2, 3)};
-		downWalkAnim = new Animation(downImages, 300);
+		Image[] walkImages = {playerSpriteSheet.getSubImage(0, 0), playerSpriteSheet.getSubImage(1, 0)};
+		walkAnim = new Animation(walkImages, 300);
 	}
 	
 	public void updatePosition(float deltaX, float deltaY)
@@ -81,7 +61,7 @@ public class Player extends Character
 		this.xPos -= deltaX;
 		this.yPos -= deltaY;
 		
-		System.out.print("  PlayerX: " + this.xPos + " PlayerY: " + this.yPos);
+		//System.out.print("  PlayerX: " + this.xPos + " PlayerY: " + this.yPos);
 	}
 	
 	public boolean addItem(Item item)
@@ -107,66 +87,65 @@ public class Player extends Character
 		this.inventory[index] = new EmptyItem();
 	}
 	
-	public void render()
+	public void render(float deltaX, float deltaY)
 	{
-		if(playerMoveDirection.compareTo(MoveDirection.left) == 0)
+		float angle = 0;
+		
+		if(deltaX == 0)
 		{
-			leftWalkAnim.draw(Globals.SCREEN_WIDTH/2 - this.PLAYER_IMAGE_SIZE/2, Globals.SCREEN_HEIGHT/2 - this.PLAYER_IMAGE_SIZE/2, PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE);
-		}else if(playerMoveDirection.compareTo(MoveDirection.right) == 0)
+			if(deltaY >= 0)
+			{
+				angle = (float) (Math.PI/2.0f);
+			}else
+			{
+				angle = (float) (-Math.PI/2.0f);
+			}
+		}else if(deltaX > 0)
 		{
-			rightWalkAnim.draw(Globals.SCREEN_WIDTH/2 - this.PLAYER_IMAGE_SIZE/2, Globals.SCREEN_HEIGHT/2 - this.PLAYER_IMAGE_SIZE/2, PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE);
-		}else if(playerMoveDirection.compareTo(MoveDirection.up) == 0)
+			angle = (float) Math.atan(deltaY/deltaX);
+		}else
 		{
-			upWalkAnim.draw(Globals.SCREEN_WIDTH/2 - this.PLAYER_IMAGE_SIZE/2, Globals.SCREEN_HEIGHT/2 - this.PLAYER_IMAGE_SIZE/2, PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE);
-		}else if(playerMoveDirection.compareTo(MoveDirection.down) == 0)
-		{
-			downWalkAnim.draw(Globals.SCREEN_WIDTH/2 - this.PLAYER_IMAGE_SIZE/2, Globals.SCREEN_HEIGHT/2 - this.PLAYER_IMAGE_SIZE/2, PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE);
-		}else if(playerMoveDirection.compareTo(MoveDirection.stationary) == 0)
-		{
-			defaultImage.draw(Globals.SCREEN_WIDTH/2 - this.PLAYER_IMAGE_SIZE/2, Globals.SCREEN_HEIGHT/2 - this.PLAYER_IMAGE_SIZE/2, PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE);
+			angle = (float) -Math.atan(-deltaY/deltaX);
+			angle += Math.PI;
 		}
+		
+		Image current = walkAnim.getCurrentFrame();
+		current.setCenterOfRotation(this.PLAYER_IMAGE_SIZE/2, this.PLAYER_IMAGE_SIZE/2);
+		current.setRotation(radToDeg(angle));
+		current.draw(Globals.SCREEN_WIDTH/2 - this.PLAYER_IMAGE_SIZE/2, Globals.SCREEN_HEIGHT/2 - this.PLAYER_IMAGE_SIZE/2, PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE);
+		
+		//hack to get the animation to update
+		walkAnim.draw(-this.PLAYER_IMAGE_SIZE, -this.PLAYER_IMAGE_SIZE);
+		
+		//System.out.println("Anim: " + walkAnim.getFrameCount());
 	}
 	
 	public void setMovementDirection(MoveDirection dir)
 	{
-		playerMoveDirection = dir;
+		moveDirection = dir;
 		
-		if(playerMoveDirection.compareTo(MoveDirection.left) == 0)
+		if(moveDirection.compareTo(MoveDirection.stationary) == 0)
 		{
-			rightWalkAnim.stop();
-			upWalkAnim.stop();
-			downWalkAnim.stop();
-			leftWalkAnim.start();
-		}else if(playerMoveDirection.compareTo(MoveDirection.right) == 0)
+			walkAnim.stop();
+		}else
 		{
-			leftWalkAnim.stop();
-			upWalkAnim.stop();
-			downWalkAnim.stop();
-			rightWalkAnim.start();
-		}else if(playerMoveDirection.compareTo(MoveDirection.up) == 0)
-		{
-			rightWalkAnim.stop();
-			leftWalkAnim.stop();
-			downWalkAnim.stop();
-			upWalkAnim.start();
-		}else if(playerMoveDirection.compareTo(MoveDirection.down) == 0)
-		{
-			rightWalkAnim.stop();
-			upWalkAnim.stop();
-			leftWalkAnim.stop();
-			downWalkAnim.start();
-		}else if(playerMoveDirection.compareTo(MoveDirection.stationary) == 0)
-		{
-			rightWalkAnim.stop();
-			upWalkAnim.stop();
-			downWalkAnim.stop();
-			leftWalkAnim.stop();
+			walkAnim.start();
 		}
 	}
-
 
 	public float getMoveSpeed()
 	{
 		return this.speed;
+	}
+	
+	public int getSize()
+	{
+		return this.PLAYER_IMAGE_SIZE;
+	}
+
+	public void dealDamage(float dmg)
+	{
+		this.health -= dmg;
+		this.gameState.getHealthBar().setCurrentValue(health);
 	}
 }

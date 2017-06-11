@@ -1,6 +1,5 @@
 package com.dora.gui;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -8,6 +7,7 @@ import org.newdawn.slick.SlickException;
 
 import com.dora.item.EmptyItem;
 import com.dora.item.Item;
+import com.dora.main.GameState;
 import com.dora.main.Main;
 
 public class HotBar extends GuiElement
@@ -27,7 +27,9 @@ public class HotBar extends GuiElement
 	private GameContainer gc;
 	private Main app;
 	
-	public HotBar(String name, float x, float y, int slotW, int h, GameContainer gc, Main app, int slotNumber, String slotImagePath, String selectorImagePath)
+	private GameState gameState;
+	
+	public HotBar(String name, float x, float y, int slotW, int h, GameContainer gc, Main app, int slotNumber, String slotImagePath, String selectorImagePath, GameState gs)
 	{
 		super(name);
 		this.x = (int) x;
@@ -36,6 +38,8 @@ public class HotBar extends GuiElement
 		this.slotWidth = slotW;
 		this.gc = gc;
 		this.app = app;
+		
+		this.gameState = gs; 
 		
 		this.selectedId = 0;
 		this.slotNumber = slotNumber;
@@ -89,6 +93,8 @@ public class HotBar extends GuiElement
 	
 	public void selectItem(int newId)
 	{
+		this.gameState.setCursor(GameState.cursors.standard);
 		this.selectedId = newId;
+		items[selectedId].onEquip();
 	}
 }
