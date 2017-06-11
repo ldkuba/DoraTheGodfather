@@ -13,7 +13,7 @@ public class Tree extends Objects {
 	public static int sizeY = 3;
 	
 	public Tree(int xCoord, int yCoord) {
-		super(sizeX, sizeY, xCoord, yCoord);
+		super(sizeX, sizeY, xCoord, yCoord, true);
 		
 		getTextures().add(new ArrayList<Image>());
 		getTextures().add(new ArrayList<Image>());

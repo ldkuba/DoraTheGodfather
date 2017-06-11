@@ -12,7 +12,7 @@ public class Chest extends Objects {
 	public static int sizeX = 2;
 	public static int sizeY = 1;
 	public Chest(int xCoord, int yCoord) {
-		super(sizeX, sizeY, xCoord, yCoord);
+		super(sizeX, sizeY, xCoord, yCoord, true);
 		
 		try{
 		getTextures().add(new ArrayList<Image>());

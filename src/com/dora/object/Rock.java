@@ -12,7 +12,7 @@ public class Rock extends Objects {
 	public static int sizeY =1;
 	
 	public Rock(int xCoord, int yCoord) {
-		super(sizeX, sizeY, xCoord, yCoord);
+		super(sizeX, sizeY, xCoord, yCoord, true);
 		getTextures().add((new ArrayList<Image>()));
 		try{
 		getTextures().get(0).add(new Image("res/Textures/Rock.png"));
