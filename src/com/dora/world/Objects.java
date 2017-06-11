@@ -16,11 +16,12 @@ public class Objects {
 	
 	private ArrayList <ArrayList <Image>> textures;
 	
-	public Objects(int sizeX, int sizeY, int xCoord, int yCoord){
+	public Objects(int sizeX, int sizeY, int xCoord, int yCoord, boolean blocks){
 		this.sizeX=sizeX;
 		this.sizeY=sizeY;
 		this.xCoord=xCoord;
 		this.yCoord=yCoord;
+		this.blocks=blocks;
 		textures= new ArrayList<ArrayList<Image>>();
 	}
 	
