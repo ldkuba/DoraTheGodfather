@@ -21,7 +21,7 @@ public class Hunter extends NPC
 	private final int HUNTER_IMAGE_SIZE_SS = 32;
 	private final int HUNTER_IMAGE_SIZE = 45;
 	
-	private final int BLIND_FOLLOW_RANGE = 15;
+	private final int BLIND_FOLLOW_RANGE = 10;
 	
 	private final float ATTACK_DAMAGE = 5.0f;
 	
@@ -82,8 +82,8 @@ public class Hunter extends NPC
 		
 		//System.out.println("Distance to Player: " + distanceToPlayer);
 		
-		if(distanceToPlayer < BLIND_FOLLOW_RANGE*Globals.TILE_SIZE)
-		{
+		//if(distanceToPlayer < BLIND_FOLLOW_RANGE*Globals.TILE_SIZE)
+		//{
 			if(distanceToPlayer < this.attackDistance)
 			{
 				//ATTACK PLAYER
@@ -103,17 +103,17 @@ public class Hunter extends NPC
 					gameState.getPlayer().dealDamage(this.ATTACK_DAMAGE);
 				}
 				
-			}else
-			{
-				//A*STAR
-				if(walkAnim.isStopped())
-				{
-					System.out.println("WALKING");
-					
-					walkAnim.start();
-					attackAnim.stop();
-				}
-			}
+//			}else
+//			{
+//				//A*STAR
+//				if(walkAnim.isStopped())
+//				{
+//					System.out.println("WALKING");
+//					
+//					walkAnim.start();
+//					attackAnim.stop();
+//				}
+//			}
 		}else
 		{
 			//FOLLOW PLAYER
@@ -146,6 +146,20 @@ public class Hunter extends NPC
 			}
 			
 			//System.out.println("Following");
+		}
+	}
+	
+	public void setInventory(Item[] items)
+	{
+		for(int i = 0; i < this.MAX_INVENTORY_SIZE; i++)
+		{
+			if(i >= items.length)
+			{
+				this.inventory[i] = new EmptyItem();
+			}else
+			{
+				this.inventory[i] = items[i];
+			}
 		}
 	}
 	

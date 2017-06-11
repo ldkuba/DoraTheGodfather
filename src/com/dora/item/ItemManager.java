@@ -45,6 +45,7 @@ public class ItemManager
 		}
 	}
 	
+	
 	public void render(int xOffset, int yOffset)
 	{
 		//render dropped objects
@@ -54,10 +55,10 @@ public class ItemManager
 		}
 	}
 	
-	public void addDroppedItem(Item item)
+	public void addDroppedItem(Item item, int x, int y)
 	{
-		item.setX((int) (gameState.getPlayer().getX() + rand.nextInt(Globals.TILE_SIZE/2)*(rand.nextInt(3)-1)));
-		item.setY((int) (gameState.getPlayer().getY() + rand.nextInt(Globals.TILE_SIZE/2)*(rand.nextInt(3)-1)));
+		item.setX((int) (x + rand.nextInt(Globals.TILE_SIZE/2)*(rand.nextInt(3)-1)));
+		item.setY((int) (y + rand.nextInt(Globals.TILE_SIZE/2)*(rand.nextInt(3)-1)));
 		
 		item.setCanPickUp(false);
 		

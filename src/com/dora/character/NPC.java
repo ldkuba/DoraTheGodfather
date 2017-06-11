@@ -137,7 +137,12 @@ public class NPC extends Character
 		this.health -= dmg;
 		
 		if(health <= 0)
-		{
+		{			
+			for(int i = 0; i < this.inventory.length; i++)
+			{
+				this.gameState.getItemManager().addDroppedItem(inventory[i], this.xPos, this.yPos);
+			}
+			
 			gameState.getNPCManager().removeNPC(this);
 		}
 	}

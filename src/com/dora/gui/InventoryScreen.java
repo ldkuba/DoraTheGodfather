@@ -103,7 +103,7 @@ public class InventoryScreen implements MouseListener
 		if(pickedItem.getId().compareTo(Item.ItemIDs.empty) != 0)
 		{
 			//drop item:
-			this.gameState.getItemManager().addDroppedItem(pickedItem);
+			this.gameState.getItemManager().addDroppedItem(pickedItem, gameState.getPlayer().getX(), gameState.getPlayer().getY());
 			
 			pickedItem  = new EmptyItem();
 		}
@@ -266,7 +266,7 @@ public class InventoryScreen implements MouseListener
 				}else
 				{
 					//dropItem
-					this.gameState.getItemManager().addDroppedItem(pickedItem);
+					this.gameState.getItemManager().addDroppedItem(pickedItem, gameState.getPlayer().getX(), gameState.getPlayer().getY());
 					
 					this.pickedItem = new EmptyItem();
 					
