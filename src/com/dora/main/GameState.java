@@ -3,21 +3,27 @@ package com.dora.main;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.dora.character.NPCManager;
 import com.dora.character.Player;
+import com.dora.entity.Entity;
+import com.dora.entity.EntityManager;
 import com.dora.gui.Button;
 import com.dora.gui.GuiManager;
 import com.dora.gui.HotBar;
 import com.dora.gui.InventoryScreen;
 import com.dora.gui.MyTextField;
 import com.dora.gui.ScalingBar;
+import com.dora.item.Gun;
 import com.dora.item.Item;
 import com.dora.item.Item1;
 import com.dora.item.ItemManager;
@@ -35,12 +41,25 @@ public class GameState extends BasicGameState implements ComponentListener
 	//PLAYER
 	private Player player;
 	
+	//NPCS
+	private NPCManager npcManager;
+	
 	//ITEMS
 	private ItemManager itemManager;
+	
+	//ENTITIES
+	private EntityManager entityManager;
 
 	//GUI
 	private HotBar itemBar;
 	private InventoryScreen inventoryScreen;
+	
+	public enum cursors {
+		standard, aim, resource
+	}
+	
+	private Image cursorImage;
+	private SpriteSheet cursorSS;	
 	
 	private boolean inMenu = false;
 	private GuiManager gameGuiManager;
@@ -58,16 +77,28 @@ public class GameState extends BasicGameState implements ComponentListener
 		//Initialize Item Images Array (This has to come before: GUI, )
 		Item.loadImages("res/items0.png", 64, 4);
 		
+		//Init entity array
+		Entity.loadImages("res/entities0.png", 64, 4);
+		
 		// GUI =====================================VVVVVVVVVVVVVV		
 		gameGuiManager = new GuiManager(this);
 		
-		healthBar = new ScalingBar("HealthBar", Globals.SCREEN_WIDTH*0.05f, Globals.SCREEN_HEIGHT*0.9f, 150, 30, gc, app, 10.0f, Color.red);
+		healthBar = new ScalingBar("HealthBar", Globals.SCREEN_WIDTH*0.05f, Globals.SCREEN_HEIGHT*0.9f, 150, 30, gc, app, 100.0f, Color.red);
 		gameGuiManager.addComponent(healthBar);
 		
-		itemBar = new HotBar("ItemBar", Globals.SCREEN_WIDTH*0.3f, Globals.SCREEN_HEIGHT*0.9f, 64, 64, gc, app, 10, "res/gui/slot.png", "res/gui/hotbarSelector.png");
+		itemBar = new HotBar("ItemBar", Globals.SCREEN_WIDTH*0.334f, Globals.SCREEN_HEIGHT*0.9f, 64, 64, gc, app, 10, "res/gui/slot.png", "res/gui/hotbarSelector.png", this);
 		gameGuiManager.addComponent(itemBar);
 		
 		inventoryScreen = new InventoryScreen(gameGuiManager, gc, app, this);
+		
+		try{
+			cursorImage = new Image("res/gui/cursors.png");
+		}catch (SlickException e)
+		{
+			e.printStackTrace();
+		}
+		
+		cursorSS = new SpriteSheet(cursorImage, 32, 32);
 		
 		// END GUI ================================^^^^^^^^^^^^^^^
 		
@@ -81,6 +112,10 @@ public class GameState extends BasicGameState implements ComponentListener
 		world = new World();
 		
 		itemManager = new ItemManager(this);
+		
+		entityManager = new EntityManager(this);
+		
+		npcManager = new NPCManager(this);
 	
 	}
 
@@ -89,6 +124,10 @@ public class GameState extends BasicGameState implements ComponentListener
 	{
 		for(int i = 0; i < 10; i++)
 			player.addItem(new Item1());
+		
+		player.addItem(new Gun(this));
+		
+		this.setCursor(cursors.standard);
 	}
 
 	// render-method for all the things happening on-screen
@@ -101,11 +140,19 @@ public class GameState extends BasicGameState implements ComponentListener
 		//draw world
 		world.display(xOffset, yOffset);
 		
-		//draws player	================================//
-		player.render();								//
-														// THESE BOTH WILL BE IN WORLD.DISPLAY LATER
+		//draws player  ================================//
+		float mouseDeltaX = gc.getInput().getMouseX() - Globals.SCREEN_WIDTH/2;
+		float mouseDeltaY = gc.getInput().getMouseY() - Globals.SCREEN_HEIGHT/2;
+		player.render(mouseDeltaX, mouseDeltaY);
+																									// THESE THREE WILL BE IN WORLD.DISPLAY LATER
 		//draws items									//
 		itemManager.render(xOffset, yOffset);//=========//
+		
+		//drwn entities
+		entityManager.render(xOffset, yOffset);
+		
+		//draws npcs
+		npcManager.render(xOffset, yOffset);
 		
 		//Draws GUI
 		gameGuiManager.draw(gc, g);
@@ -149,6 +196,16 @@ public class GameState extends BasicGameState implements ComponentListener
 		int INTdeltaX = (int) deltaX;
 		int INTdeltaY = (int) deltaY;
 		
+		if(!checkMoveX(INTdeltaX, player.getX(), player.getY(), player.getSize()))
+		{
+			INTdeltaX = 0;
+		}
+		
+		if(!checkMoveY(INTdeltaY, player.getX(), player.getY(), player.getSize()))
+		{
+			INTdeltaY = 0;
+		}
+		
 		xOffset += INTdeltaX;
 		yOffset += INTdeltaY;
 		
@@ -157,8 +214,133 @@ public class GameState extends BasicGameState implements ComponentListener
 		// FLOATING ITEMS
 		itemManager.update();
 		
+		//entities update
+		entityManager.update(delta);
+		
+		// NPCS UPDATE
+		npcManager.update(delta);
+		
+		//System.out.println("Delta: " + delta);
+		
 		//System.out.println(" XOffset: " + (xOffset + Globals.SCREEN_WIDTH/2 - Globals.TILE_SIZE/2) + " YOffset: " + (yOffset + Globals.SCREEN_HEIGHT/2 - Globals.TILE_SIZE/2));
 		
+	}
+	
+	public boolean checkMoveX(int deltaX, int xPos, int yPos, int size)
+	{	
+		if(deltaX < 0)
+		{
+			int tileX = (xPos + deltaX + size) / Globals.TILE_SIZE;
+			int tileY = yPos / Globals.TILE_SIZE;
+			
+			if(tileX < 0 || tileX >= Globals.WORLD_SIZE_X)
+				return false;
+			
+			if(yPos > (tileY*Globals.TILE_SIZE))
+			{
+				if(!world.isPassable(tileX, tileY) || !world.isPassable(tileX, tileY+1))
+				{
+					return false;
+				}
+			}else
+			{
+				if(!world.isPassable(tileX, tileY))
+				{
+					return false;
+				}
+			}
+		}else if(deltaX > 0)
+		{
+			int tileX = (xPos - deltaX) / Globals.TILE_SIZE;
+			int tileY = yPos / Globals.TILE_SIZE;
+			
+			if(tileX < 0 || tileX >= Globals.WORLD_SIZE_X)
+				return false;
+			
+			if(yPos > tileY*Globals.TILE_SIZE)
+			{
+				if(!world.isPassable(tileX, tileY) || !world.isPassable(tileX, tileY+1))
+				{
+					return false;
+				}
+			}else
+			{
+				if(!world.isPassable(tileX, tileY))
+				{
+					return false;
+				}
+			}
+		}
+			
+		return true;
+	}
+	
+	public boolean checkMoveY(int deltaY, int xPos, int yPos, int size)
+	{
+		if(deltaY < 0)
+		{
+			int tileX = (xPos) / Globals.TILE_SIZE;
+			int tileY = (yPos + deltaY + size) / Globals.TILE_SIZE;
+			
+			if(tileY < 0 || tileY >= Globals.WORLD_SIZE_X)
+				return false;
+			
+			if(xPos > tileX*Globals.TILE_SIZE)
+			{
+				if(!world.isPassable(tileX, tileY) || !world.isPassable(tileX+1, tileY))
+				{
+					return false;
+				}
+			}else
+			{
+				if(!world.isPassable(tileX, tileY))
+				{
+					return false;
+				}
+			}
+		}else if(deltaY > 0)
+		{
+			int tileX = xPos / Globals.TILE_SIZE;
+			int tileY = (yPos - deltaY) / Globals.TILE_SIZE;		
+			
+			if(tileY < 0 || tileY >= Globals.WORLD_SIZE_X)
+				return false;
+			
+			if(xPos > tileX*Globals.TILE_SIZE)
+			{
+				if(!world.isPassable(tileX, tileY) || !world.isPassable(tileX+1, tileY))
+				{
+					return false;
+				}
+			}else
+			{
+				if(!world.isPassable(tileX, tileY))
+				{
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public void setCursor(cursors cursor)
+	{
+		try{
+			if(cursor.compareTo(cursors.standard) == 0)
+			{
+				this.gc.setMouseCursor(cursorSS.getSubImage(0, 0), 0, 0);
+			}else if(cursor.compareTo(cursors.aim) == 0)
+			{
+				this.gc.setMouseCursor(cursorSS.getSubImage(1, 0), 0, 0);
+			}else if(cursor.compareTo(cursors.resource) == 0)
+			{
+				this.gc.setMouseCursor(cursorSS.getSubImage(0, 1), 0, 0);
+			}
+		}catch (SlickException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public HotBar getHotbar()
@@ -187,6 +369,21 @@ public class GameState extends BasicGameState implements ComponentListener
 		return this.itemManager;
 	}
 
+	public ScalingBar getHealthBar()
+	{
+		return this.healthBar;
+	}
+	
+	public World getWorld()
+	{
+		return this.world;
+	}
+	
+	public EntityManager getEntityManager()
+	{
+		return this.entityManager;
+	}
+	
 	public void keyPressed(int key, char c)
 	{		
 		if(key == Input.KEY_A)

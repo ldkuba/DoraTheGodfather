@@ -8,7 +8,7 @@ public class Item
 {
 	public static enum ItemIDs 
 	{
-		empty, one
+		empty, one, gun
 	}
 	
 	public static Image[] itemImages;
@@ -67,10 +67,9 @@ public class Item
 		{
 			for(int i = 0; i < Math.sqrt(number); i++)
 			{
-				itemImages[i*j] = sS.getSubImage(i, j);
+				itemImages[(int) (j*Math.sqrt(number) + i)] = sS.getSubImage(i, j);
 			}
 		}
-		
 	}
 	
 	public boolean canPickUp()
@@ -82,6 +81,10 @@ public class Item
 	{
 		this.canPickUp = canPickUp;
 	}
+	
+	public void onEquip() {}
+	
+	public void onLeftClick() {}
 
 	public ItemIDs getId()
 	{
