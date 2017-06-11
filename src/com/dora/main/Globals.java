@@ -3,9 +3,9 @@ package com.dora.main;
 public class Globals
 {
 	public static final double VERSION = 1.0;
-	public static int SCREEN_WIDTH = 1600;
-	public static int SCREEN_HEIGHT = 900;
-	public static boolean FULLSCREEN = false;
+	public static int SCREEN_WIDTH = 1920;
+	public static int SCREEN_HEIGHT = 1080;
+	public static boolean FULLSCREEN = true;
 	public static final int FPS = 60;
 	
 	//Game State ids
@@ -15,5 +15,6 @@ public class Globals
 	
 	public static int WORLD_SIZE_X = 100;
 	public static int WORLD_SIZE_Y = 100;
-	public static int TILE_SIZE =16;
+
+	public static int TILE_SIZE = 32;
 }

@@ -15,8 +15,38 @@ public class Item
 	
 	protected ItemIDs id;
 	
-	public Item() {}
+	private boolean canPickUp;
 	
+	protected int xPos, yPos; //absolute positions (when dropped)
+	
+	public Item() 
+	{
+		xPos = 0;
+		yPos = 0;
+		
+		canPickUp = false;
+	}
+	
+	public int getX()
+	{
+		return xPos;
+	}
+	
+	public void setX(int xPos)
+	{
+		this.xPos = xPos;
+	}
+
+	public int getY()
+	{
+		return yPos;
+	}
+
+	public void setY(int yPos)
+	{
+		this.yPos = yPos;
+	}
+
 	public static void loadImages(String filePath, int squareSize, int number)
 	{
 		itemImages = new Image[number];
@@ -43,6 +73,16 @@ public class Item
 		
 	}
 	
+	public boolean canPickUp()
+	{
+		return canPickUp;
+	}
+
+	public void setCanPickUp(boolean canPickUp)
+	{
+		this.canPickUp = canPickUp;
+	}
+
 	public ItemIDs getId()
 	{
 		return this.id;
