@@ -196,4 +196,9 @@ public class Hunter extends NPC
 			attackAnim.draw(-this.HUNTER_IMAGE_SIZE, -this.HUNTER_IMAGE_SIZE);
 		}
 	}
+	
+	public int getSize()
+	{
+		return this.HUNTER_IMAGE_SIZE;
+	}
 }

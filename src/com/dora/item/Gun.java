@@ -23,12 +23,12 @@ public class Gun extends Item
 	{
 		Bullet bullet = new Bullet();
 		
-		float angle = gameState.getPlayer().getAngle();
+		float angle = degToRad(gameState.getPlayer().getAngle());
 		
 		float bulletSpawnDistance = gameState.getPlayer().getSize()*1.5f;
 		
 		bullet.setxPos((int) (gameState.getPlayer().getX() + bulletSpawnDistance*Math.cos(angle)));
-		bullet.setyPos((int) (gameState.getPlayer().getY() - bulletSpawnDistance*Math.sin(angle)));
+		bullet.setyPos((int) (gameState.getPlayer().getY() + bulletSpawnDistance*Math.sin(angle)));
 		bullet.setAngle(angle);
 		
 		gameState.getEntityManager().addEntity(bullet);
@@ -36,5 +36,10 @@ public class Gun extends Item
 		bullet.fire();
 		
 		System.out.println("Firing");
+	}
+	
+	private float degToRad(float deg)
+	{
+		return (float) ((deg*Math.PI) / 180.0f);
 	}
 }

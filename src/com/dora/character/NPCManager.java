@@ -24,6 +24,17 @@ public class NPCManager
 	{
 		Hunter hunter = new Hunter(this.gameState, NPCType.hunter, 70, 720);
 		npcs.add(hunter);
+		
+		Hunter hunter2 = new Hunter(this.gameState, NPCType.hunter, 140, 720);
+		npcs.add(hunter2);
+		
+		Hunter hunter3 = new Hunter(this.gameState, NPCType.hunter, 300, 720);
+		npcs.add(hunter3);
+	}
+	
+	public ArrayList<NPC> getNPCs()
+	{
+		return this.npcs;
 	}
 	
 	public void addNPC(NPC npc)

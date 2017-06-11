@@ -12,6 +12,8 @@ public class NPC extends Character
 	
 	protected GameState gameState;
 	
+	private int imageSize;
+	
 	protected NPCType type;
 	
 	public NPC(GameState gs, NPCType type, int x, int y)
@@ -123,6 +125,11 @@ public class NPC extends Character
 		}
 		
 		return true;
+	}
+	
+	public int getSize()
+	{
+		return this.imageSize;
 	}
 	
 	public void dealDamage(float dmg)
