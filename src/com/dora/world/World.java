@@ -23,16 +23,15 @@ public class World {
 	public World() {
 		terrainGrid = new ArrayList<ArrayList<Tile>>(Globals.WORLD_SIZE_X);
 		objects = new ArrayList<Objects>();
-		
-		try{
-			water = new Image ("res/Textures/Water.png");
-			grass = new Image ("res/Textures/Grass.png");
-			dirt = new Image ("res/Textures/Dirt.png");
-		}catch(SlickException e){
-			
+
+		try {
+			water = new Image("res/Textures/Water.png");
+			grass = new Image("res/Textures/Grass.png");
+			dirt = new Image("res/Textures/Dirt.png");
+		} catch (SlickException e) {
 
 		}
-		
+
 		// generate terrain & Initial state of objects in the world.
 		fill();
 	}
@@ -76,55 +75,69 @@ public class World {
 				} else {
 					terrainGrid.get(i).add(new Tile(grass, true));
 				}
-				
+
 			}
 			waterCounter++;
 		}
-		
-		int objectChance =5;
-		for(int i=0; i<Globals.WORLD_SIZE_X; i++){
-			for (int j=0; j<Globals.WORLD_SIZE_Y;j++){
-				if(rand.nextInt(100)<=objectChance){
-					int oType = rand.nextInt(2);
-					if(oType==0){
-						if(canPlaceObject(Rock.sizeX, Rock.sizeY, i, j)){
-							//Rock rock = new Rock(i, j);
-							addObject(new Rock(i, j), i , j);
+
+		int objectChance = 5;
+		for (int i = 0; i < Globals.WORLD_SIZE_X; i++) {
+			for (int j = 0; j < Globals.WORLD_SIZE_Y; j++) {
+				if (rand.nextInt(100) <= objectChance) {
+					int oType = rand.nextInt(3);
+					if (oType == 0) {
+						if (canPlaceObject(Rock.sizeX, Rock.sizeY, i, j)) {
+							// Rock rock = new Rock(i, j);
+							addObject(new Rock(i, j), i, j);
 						}
-					}else if(oType==1){
-						if(canPlaceObject(Chest.sizeX, Chest.sizeY, i, j)){
-							//Chest chest = new Chest(i, j);
-							addObject(new Chest(i, j), i , j);
+					} else if (oType == 1) {
+						if (canPlaceObject(Chest.sizeX, Chest.sizeY, i, j)) {
+							// Chest chest = new Chest(i, j);
+							addObject(new Chest(i, j), i, j);
 						}
+					} else if (oType == 2) {
+						if (canPlaceObject(Tree.sizeX, Tree.sizeY, i, j)) {
+							// Chest chest = new Chest(i, j);
+							addObject(new Tree(i, j), i, j);
+						}
+
 					}
 				}
 			}
 		}
 
 	}
-	
-	public boolean canPlaceObject(int sizeX,int sizeY,int x,int y){
-		if (sizeX + x > Globals.WORLD_SIZE_X || sizeY + y > Globals.WORLD_SIZE_Y){
+
+	public boolean canPlaceObject(int sizeX, int sizeY, int x, int y) {
+		if (sizeX + x > Globals.WORLD_SIZE_X || sizeY + y > Globals.WORLD_SIZE_Y) {
 			return false;
 		}
-		for (int i =0; i<sizeX;i++){
-			for(int j=0;j<sizeY;j++){
-				if(!terrainGrid.get(x+i).get(y+j).canPlaceObject()){
+		for (int i = 0; i < sizeX; i++) {
+			for (int j = 0; j < sizeY; j++) {
+				if (!terrainGrid.get(x + i).get(y + j).canPlaceObject()) {
 					return false;
 				}
 			}
 		}
 		return true;
 	}
-	
-	public void addObject(Objects obj, int x, int y){
+
+	public boolean isPassable(int x, int y) {
+		return terrainGrid.get(x).get(y).isPassable();
+	}
+
+	public Objects getObject(int x, int y) {
+		return terrainGrid.get(x).get(y).getObjectReference();
+	}
+
+	public void addObject(Objects obj, int x, int y) {
 		objects.add(obj);
-		for (int i =0; i<obj.getSizeX();i++){
-			for(int j=0;j<obj.getSizeY();j++){
-				if(!terrainGrid.get(x+i).get(j+y).canPlaceObject()){
+		for (int i = 0; i < obj.getSizeX(); i++) {
+			for (int j = 0; j < obj.getSizeY(); j++) {
+				if (!terrainGrid.get(x + i).get(j + y).canPlaceObject()) {
 					System.err.println("what");
 				}
-				terrainGrid.get(x+i).get(j+y).setObject(obj, obj.getTextures().get(i).get(j));
+				terrainGrid.get(x + i).get(j + y).setObject(obj, obj.getTextures().get(i).get(j));
 			}
 		}
 	}
@@ -138,10 +151,10 @@ public class World {
 		} else if (i == 2) {
 			dirt.draw(x, y, Globals.TILE_SIZE, Globals.TILE_SIZE);
 		}
-		
-		if(j == 1){
+
+		if (j == 1) {
 			tree.draw(x, y, Globals.TILE_SIZE, Globals.TILE_SIZE);
-		} else if(j == 2){
+		} else if (j == 2) {
 			rock.draw(x, y, Globals.TILE_SIZE, Globals.TILE_SIZE);
 		}
 	}
@@ -150,11 +163,10 @@ public class World {
 
 		for (int i = 0; i < Globals.SCREEN_WIDTH / Globals.TILE_SIZE + 1; i++) {
 			for (int j = 0; j < Globals.SCREEN_HEIGHT / Globals.TILE_SIZE + 1; j++) {
-				if (i + (int) xOffset < Globals.WORLD_SIZE_X && i + (int) xOffset > 0 && j + (int) yOffset < Globals.WORLD_SIZE_Y && j + (int) yOffset > 0){
+				if (i + (int) xOffset < Globals.WORLD_SIZE_X && i + (int) xOffset > 0 && j + (int) yOffset < Globals.WORLD_SIZE_Y && j + (int) yOffset > 0) {
 					terrainGrid.get(i + (int) xOffset).get(j + (int) yOffset).draw(i * Globals.TILE_SIZE + xOffset, j * Globals.TILE_SIZE + yOffset);
 				}
-				
-					
+
 			}
 		}
 	}

@@ -37,6 +37,14 @@ public class Tile {
 		this.oRef=null;
 	}
 	
+	public boolean isPassable(){
+		return passable;
+	}
+	
+	public Objects getObjectReference(){
+		return oRef;
+	}
+	
 	public boolean canPlaceObject(){
 		return placeObject;
 	}
