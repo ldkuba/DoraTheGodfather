@@ -22,11 +22,15 @@ public class Player extends Character
 	private final float DEFAULT_SPEED = 0.1f;
 	private final int MAX_INV_SIZE = 48 + 10;
 	
+	private float angle;
+	
 	private GameState gameState;
 	
 	public Player(float xOffset, float yOffset, GameState gs)
 	{
 		this.gameState = gs;
+		
+		this.angle = 0;
 		
 		this.health = MAX_HEALTH;
 		this.speed = DEFAULT_SPEED;
@@ -114,6 +118,8 @@ public class Player extends Character
 		current.setRotation(radToDeg(angle));
 		current.draw(Globals.SCREEN_WIDTH/2 - this.PLAYER_IMAGE_SIZE/2, Globals.SCREEN_HEIGHT/2 - this.PLAYER_IMAGE_SIZE/2, PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE);
 		
+		this.angle = radToDeg(angle);
+		
 		//hack to get the animation to update
 		walkAnim.draw(-this.PLAYER_IMAGE_SIZE, -this.PLAYER_IMAGE_SIZE);
 		
@@ -147,5 +153,10 @@ public class Player extends Character
 	{
 		this.health -= dmg;
 		this.gameState.getHealthBar().setCurrentValue(health);
+	}
+	
+	public float getAngle()
+	{
+		return this.angle;
 	}
 }

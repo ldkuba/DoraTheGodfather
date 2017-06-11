@@ -10,6 +10,8 @@ public class EntityManager
 	
 	private GameState gameState;
 	
+	private final int MAX_LIFETIME = 500;
+	
 	public EntityManager(GameState gs)
 	{
 		this.gameState = gs;
@@ -20,8 +22,10 @@ public class EntityManager
 	{
 		for(int i = 0; i < entities.size(); i++)
 		{
-			entities.get(i).update(tpf);
+			entities.get(i).update(tpf, this.gameState);
 		}
+		
+		System.out.println("updatng " + entities.size() + " entities");
 	}
 	
 	public void render(int xOffset, int yOffset)

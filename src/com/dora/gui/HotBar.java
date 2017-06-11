@@ -90,6 +90,11 @@ public class HotBar extends GuiElement
 			}
 		}
 	}
+
+	public Item getSelectedItem()
+	{
+		return items[selectedId];
+	}
 	
 	public void selectItem(int newId)
 	{
