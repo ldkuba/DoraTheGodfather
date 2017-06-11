@@ -11,9 +11,7 @@ import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-
-import com.dora.world.World;
-
+import com.dora.character.Player;
 import com.dora.gui.Button;
 import com.dora.gui.GuiManager;
 import com.dora.gui.HotBar;
@@ -22,26 +20,33 @@ import com.dora.gui.MyTextField;
 import com.dora.gui.ScalingBar;
 import com.dora.item.Item;
 import com.dora.item.Item1;
+import com.dora.item.ItemManager;
+import com.dora.world.World;
 
 
 public class GameState extends BasicGameState implements ComponentListener
 {
-
-	private GuiManager gameGuiManager;
-	private ScalingBar healthBar;
-
-	
-	private float xOffset=0f;
-	private float yOffset=0f;
+	//WORLD
+	private int xOffset = 0;
+	private int yOffset = 0;
 	
 	private World world;
 
+	//PLAYER
+	private Player player;
+	
+	//ITEMS
+	private ItemManager itemManager;
 
+	//GUI
 	private HotBar itemBar;
 	private InventoryScreen inventoryScreen;
 	
 	private boolean inMenu = false;
+	private GuiManager gameGuiManager;
+	private ScalingBar healthBar;
 
+	//GENERAL
 	private GameContainer gc;
 	private Main app;
 	
@@ -66,16 +71,24 @@ public class GameState extends BasicGameState implements ComponentListener
 		
 		// END GUI ================================^^^^^^^^^^^^^^^
 		
+		//PLAYER ==================================VVVVVVVVVVVVVVVVV
+		
+		player = new Player(xOffset, yOffset, this);
+		
+		// END PLAYER =============================^^^^^^^^^^^^^^^^
+		
 		//World:
 		world = new World();
+		
+		itemManager = new ItemManager(this);
 	
 	}
 
 	// init-method for initializing all resources
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
 	{
-		for(int i = 0; i < 3; i++)
-			inventoryScreen.addItem(new Item1());
+		for(int i = 0; i < 10; i++)
+			player.addItem(new Item1());
 	}
 
 	// render-method for all the things happening on-screen
@@ -88,6 +101,12 @@ public class GameState extends BasicGameState implements ComponentListener
 		//draw world
 		world.display(xOffset, yOffset);
 		
+		//draws player	================================//
+		player.render();								//
+														// THESE BOTH WILL BE IN WORLD.DISPLAY LATER
+		//draws items									//
+		itemManager.render(xOffset, yOffset);//=========//
+		
 		//Draws GUI
 		gameGuiManager.draw(gc, g);
 		
@@ -97,6 +116,48 @@ public class GameState extends BasicGameState implements ComponentListener
 	// update-method with all the magic happening in it
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
 	{
+		float deltaX = 0;
+		float deltaY = 0;
+		
+		if(gc.getInput().isKeyDown(Input.KEY_A))
+		{
+			deltaX = player.getMoveSpeed() * delta;
+		}
+		
+		if(gc.getInput().isKeyDown(Input.KEY_D))
+		{
+			deltaX = -(player.getMoveSpeed() * delta);
+		}
+		
+		if(gc.getInput().isKeyDown(Input.KEY_W))
+		{
+			deltaY = player.getMoveSpeed() * delta;
+		}
+		
+		if(gc.getInput().isKeyDown(Input.KEY_S))
+		{
+			deltaY = -(player.getMoveSpeed() * delta);
+		}
+		
+		//normalisation
+		if(yOffset != 0 && xOffset != 0)
+		{
+			deltaX *= Math.sqrt(2);
+			deltaY *= Math.sqrt(2);
+		}
+		
+		int INTdeltaX = (int) deltaX;
+		int INTdeltaY = (int) deltaY;
+		
+		xOffset += INTdeltaX;
+		yOffset += INTdeltaY;
+		
+		player.updatePosition(INTdeltaX, INTdeltaY);
+		
+		// FLOATING ITEMS
+		itemManager.update();
+		
+		//System.out.println(" XOffset: " + (xOffset + Globals.SCREEN_WIDTH/2 - Globals.TILE_SIZE/2) + " YOffset: " + (yOffset + Globals.SCREEN_HEIGHT/2 - Globals.TILE_SIZE/2));
 		
 	}
 	
@@ -104,9 +165,44 @@ public class GameState extends BasicGameState implements ComponentListener
 	{
 		return this.itemBar;
 	}
+	
+	public boolean canMove(Player.MoveDirection direction)
+	{
+		//check for collisions
+		return true;
+	}
+	
+	public Player getPlayer()
+	{
+		return this.player;
+	}
+	
+	public InventoryScreen getInventoryScreen()
+	{
+		return this.inventoryScreen;
+	}
+	
+	public ItemManager getItemManager()
+	{
+		return this.itemManager;
+	}
 
 	public void keyPressed(int key, char c)
-	{
+	{		
+		if(key == Input.KEY_A)
+		{
+			player.setMovementDirection(Player.MoveDirection.left);
+		}else if(key == Input.KEY_D)
+		{
+			player.setMovementDirection(Player.MoveDirection.right);
+		}else if(key == Input.KEY_W)
+		{
+			player.setMovementDirection(Player.MoveDirection.up);
+		}else if(key == Input.KEY_S)
+		{
+			player.setMovementDirection(Player.MoveDirection.down);
+		}
+		
 		if(key == Input.KEY_1)
 		{
 			itemBar.selectItem(0);
@@ -158,6 +254,17 @@ public class GameState extends BasicGameState implements ComponentListener
 		}
 	}
 	
+	public void keyReleased(int key, char c)
+	{
+		if(key == Input.KEY_A || key == Input.KEY_D || key == Input.KEY_W || key == Input.KEY_S)
+		{
+			if(!gc.getInput().isKeyDown(Input.KEY_A) && !gc.getInput().isKeyDown(Input.KEY_D) && !gc.getInput().isKeyDown(Input.KEY_W) && !gc.getInput().isKeyDown(Input.KEY_S))
+			{
+				player.setMovementDirection(Player.MoveDirection.stationary);
+			}
+		}
+	}
+	
 	// Intenal GUI (this is fucked up but it works)
 	public void componentActivated(AbstractComponent source)
 	{
@@ -167,6 +274,7 @@ public class GameState extends BasicGameState implements ComponentListener
 		{
 			if(gameGuiManager.getComponents().get(i) instanceof Button)
 			{
+				
 				Button b = (Button) (gameGuiManager.getComponents().get(i));
 				if(source == b.getComponent())
 				{

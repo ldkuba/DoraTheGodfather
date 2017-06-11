@@ -91,11 +91,6 @@ public class InventoryScreen implements MouseListener
 		guiManager.addComponent(itemGrid);
 		guiManager.addComponent(hotbarGrid);
 		
-		Item[] testItems = new Item[1];
-		testItems[0] = new EmptyItem();
-		
-		//temp for testing drag and drop
-		//this.addContainerInventory(testItems);
 	}
 	
 	public void hide()
@@ -104,6 +99,24 @@ public class InventoryScreen implements MouseListener
 		guiManager.removeComponent(itemGrid);
 		guiManager.removeComponent(hotbarGrid);
 		removeContainerInventory();
+		
+		if(pickedItem.getId().compareTo(Item.ItemIDs.empty) != 0)
+		{
+			//drop item:
+			this.gameState.getItemManager().addDroppedItem(pickedItem);
+			
+			pickedItem  = new EmptyItem();
+		}
+	}
+	
+	public void updatePlayerInventory(Item[] newItems)
+	{
+		this.itemGrid.fillWith(newItems);
+	}
+	
+	public boolean isPlayerInventoryFull()
+	{
+		return itemGrid.isFull();
 	}
 	
 	public boolean addItem(Item item) //on pickup
@@ -129,6 +142,7 @@ public class InventoryScreen implements MouseListener
 		if(visible)
 		{
 			Item.itemImages[this.pickedItem.getId().ordinal()].draw(gc.getInput().getMouseX() - this.gridSize/2, gc.getInput().getMouseY() - this.gridSize/2, this.gridSize, this.gridSize);
+			
 			if(!hasContainer)
 			{
 				this.noContainerImage.draw(noContainerImageX, noContainerImageY, horizontalItemSize*this.gridSize, this.verticalSize*this.gridSize);
@@ -187,6 +201,7 @@ public class InventoryScreen implements MouseListener
 					}
 
 					itemGrid.removeItem(gridPos.getX(), gridPos.getY());
+					gameState.getPlayer().removeItem(gridPos.getX()*gridPos.getY());
 					
 				}else if(hotbarGrid.getCoordinatesFromScreenSpace(x, y) != null)
 				{
@@ -200,6 +215,7 @@ public class InventoryScreen implements MouseListener
 					}
 					
 					hotbarGrid.removeItem(gridPos.getX(), gridPos.getY());
+					gameState.getPlayer().removeItem(horizontalItemSize*verticalSize + gridPos.getX()*gridPos.getY());
 					
 					this.gameState.getHotbar().removeItem(gridPos.getX());
 				}else if(containerGrid.getCoordinatesFromScreenSpace(x, y) != null && hasContainer)
@@ -249,7 +265,8 @@ public class InventoryScreen implements MouseListener
 					this.pickedItem = containerGrid.addItem(this.pickedItem, gridPos.getX(), gridPos.getY());
 				}else
 				{
-					//dropItem (TODO)
+					//dropItem
+					this.gameState.getItemManager().addDroppedItem(pickedItem);
 					
 					this.pickedItem = new EmptyItem();
 					
