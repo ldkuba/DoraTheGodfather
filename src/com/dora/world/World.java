@@ -414,7 +414,7 @@ public class World
 	
 	public float [] getAlphas(int x, int y, int xOffset,int yOffset){
 		float [] retAlphas = new float [4];
-		float maxDist = (Globals.SCREEN_HEIGHT/2.8f);
+		float maxDist = (Globals.SCREEN_HEIGHT/2f);
 		int xx = xOffset+Globals.SCREEN_WIDTH/2;
 		int yy = yOffset+Globals.SCREEN_HEIGHT/2;
 		int tX = x*Globals.TILE_SIZE;
@@ -468,7 +468,7 @@ public class World
 
 		for (int j = 0; j < Globals.WORLD_SIZE_Y; j++)
 		{
-			for (int i = 0; i < Globals.WORLD_SIZE_Y; i++)
+			for (int i = 0; i < Globals.WORLD_SIZE_X; i++)
 			{
 				if(((i+1)*Globals.TILE_SIZE) + xOffset > 0 && i*Globals.TILE_SIZE + xOffset <= Globals.SCREEN_WIDTH && (j+1)*Globals.TILE_SIZE + yOffset > 0 && j*Globals.TILE_SIZE + yOffset < Globals.SCREEN_HEIGHT)
 				{

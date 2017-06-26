@@ -60,7 +60,6 @@ public class Tile {
 		this.terrain.setColor(Image.TOP_RIGHT, 1-this.alphas[1], 1-this.alphas[1], 1-this.alphas[1], 1-this.alphas[1]);
 		this.terrain.setColor(Image.BOTTOM_LEFT, 1-this.alphas[2], 1-this.alphas[2], 1-this.alphas[2], 1-this.alphas[2]);
 		this.terrain.setColor(Image.BOTTOM_RIGHT, 1-this.alphas[3], 1-this.alphas[3], 1-this.alphas[3],1-this.alphas[3]);
-		
 		this.terrain.setColor(Image.TOP_LEFT, 1-this.alphas[0], 1-this.alphas[0], 1-this.alphas[0], 1-this.alphas[0]);
 
 		if (this.object != null) {
